@@ -279,18 +279,18 @@ with st.form(key='lead_form'):
                 creds = dict(st.secrets["gcp_service_account"])
                 gc = gspread.service_account_from_dict(creds)
                 sh = gc.open("WIN FTTH Leads").worksheet("Leads")
-                    row = [
-                        datetime.now().strftime("%Y-%m-%d %H:%M_:%S"),
-                        name,
-                        dni,
-                        c_phone,
-                        district,
-                        chosen_plan,
-                        schedule,
+                row = [
+                    datetime.now().strftime("%Y-%m-%d %H:%M_:%S"),
+                    name,
+                    dni,
+                    c_phone,
+                    district,
+                    chosen_plan,
+                    schedule,
     ]
-                    sh.append_row(row, value_input_option="USER_ENTERED")
-                    st.balloons()
-                    st.success(f"Gracias {name}! Un asesor te contactará al {c_phone} en breve.")
-                    st.info(f"Plan: {chosen_plan} | Horario: {schedule}")
+                sh.append_row(row, value_input_option="USER_ENTERED")
+                st.balloons()
+                st.success(f"Gracias {name}! Un asesor te contactará al {c_phone} en breve.")
+                st.info(f"Plan: {chosen_plan} | Horario: {schedule}")
             except Exception as e:
                 st.error(f"Error guardando los datos: {e}")
