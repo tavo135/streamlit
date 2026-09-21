@@ -272,19 +272,6 @@ with st.form(key='lead_form'):
     
     submitted = st.form_submit_button("Quiero contratar")
     
-[connections.gsheets]
-spreadsheet = "https://docs.google.com/spreadsheets/d/Datos/edit"
-type = "service_account"
-project_id = "sheet-editor-bot"
-private_key_id = "106739306410969720707"
-private_key = "2f5852e94c399b88e9a929e0bb22838f39c26e99"
-client_email = "sheet-editor-bot@my-project-509310.iam.gserviceaccount.com"
-client_id = "106739306410969720707"
-auth_id = ""
-token_uri = ""
-auth_provider_x509_cert_url = "https://www.googleapis.com/oauth2/v1/certs"
-client_x509_cert_url = ""
-
 if submitted:
   if not name or not dni or not c_phone or not district or not address:
     st.error("Por favor completa los campos obligatorios marcados con *")
