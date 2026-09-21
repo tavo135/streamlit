@@ -1,7 +1,6 @@
-from streamlit_gsheets import GSheetsConnection
-import streamlit as at
-from datetime import datetime
 import streamlit as st
+import gspread
+from datetime import datetime
 PLANS ={
     "LIMA": {
         "400 Mbps": "S/79 x 2 meses S/1.00",
@@ -73,7 +72,7 @@ CHANNELS_LIGA1MAX = """
 
 **Misceláneos:** Canal B, VIVA, Justicia TV, JN29, Karibeña, ASIRI, Bethel TV, BH TV, Conecta2 TV, CTV, Folklore TV, Gamarra Channel, Inka Vision HD, Milenial, NEOTV, Onda Digital, SolTV, Trivu, Visión Sur
 """
-CHANNELS_LIGA1MAX_PREMIUM = """"
+CHANNELS_LIGA1MAX_PREMIUM = """
 **Locales:**
 - Nativa
 - Latina
@@ -272,24 +271,26 @@ with st.form(key='lead_form'):
     
     submitted = st.form_submit_button("Quiero contratar")
     
-if submitted:
-  if not name or not dni or not c_phone or not district or not address:
-    st.error("Por favor completa los campos obligatorios marcados con *")
-  else:
-    conn = st.connection("gsheets", type=GSheetsConection)
-    lead_data = {
-      "Fecha": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-      "Nombre": name,
-      "DNI/CE": dni,
-      "Celular": c_phone,
-      "Distrito": district,
-      "Plan": chosen_plan,
-      "Horario": schedule
-    }
-    existing_data = conn.read(worksheet="Leads", usecols=list(range(8)),ttl=5)
-    import pandas as pd
-    update_df = pd_.concat([existing_data, pd.DaraFrame([lead_data])], ignore_index=True)
-    conn.update(worksheet="Leads", data=update_df)
-    st.balloons()
-    st.success(f"Gracias {name}! Un asesor te contactará al {c_phone} en breve.")
-    st.info(f"Plan: {chosen_plan} | Horario: {schedule}")
+    if submitted:
+        if not name or not dni or not c_phone or not district or not address:
+            st.error("Por favor completa los campos obligatorios marcados con *")
+        else:
+            try:
+                creds = dict(st.secrets["gcp_service_account"])
+                gc = gspread.service_account_from_dict(creds)
+                sh = gc.open("WIN FTTH Leads").worksheet("Leads")
+                    row = [
+                        datetime.now().strftime("%Y-%m-%d %H:%M_:%S"),
+                        name,
+                        dni,
+                        c_phone,
+                        district,
+                        chosen_plan,
+                        schedule,
+    ]
+                    sh.append_row(row, value_input_option="USER_ENTERED")
+                    st.balloons()
+                    st.success(f"Gracias {name}! Un asesor te contactará al {c_phone} en breve.")
+                    st.info(f"Plan: {chosen_plan} | Horario: {schedule}")
+            except Exception as e:
+                st.error(f"Error guardando los datos: {e}")
