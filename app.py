@@ -8,7 +8,7 @@ try:
     gc = gspread.service_Account_from_dict(creds)
     st = gc.open("WIN FTTH Leads")
     st.success(f"Connected to: {sh.title}")
-    st.write("Worksheets found:" [ws.title for ws in sh.worksjeets()])
+    st.write("Worksheets found:" [ws.title for ws in sh.worksheets()])
 except gspread.exceptions.SpreadsheetNotFound:
     st.error("Spreadsheet not found. Check the name or share it with the service account email.")
 except Exception as e:
