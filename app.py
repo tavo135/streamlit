@@ -5,7 +5,7 @@ from datetime import datetime
 st.title("Conection Test")
 try:
     creds = dict(st.secrets["gcp_service_account"])
-    gc = gspread.service_Account_from_dict(creds)
+    gc = gspread.service_account_from_dict(creds)
     st = gc.open("WIN FTTH Leads")
     st.success(f"Connected to: {sh.title}")
     st.write("Worksheets found:", [ws.title for ws in sh.worksheets()])
