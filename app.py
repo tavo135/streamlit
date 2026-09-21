@@ -5,12 +5,7 @@ from datetime import datetime
 import streamlit as st
 import gspread
 
-creds = dict(st.secrets["gcp_service_account"])
-gc = gspread.service_account_from_dict(creds)
 
-# List all spreadsheets this service account can access
-sheets = gc.openall()
-st.write([sheet.title for sheet in sheets])
 PLANS ={
     "LIMA": {
         "400 Mbps": "S/79 x 2 meses S/1.00",
@@ -277,7 +272,6 @@ with st.form(key='lead_form'):
             "Tramo 3: 16:00 a 20:00",
         ]
     )
-    advisor = "Gustavo Medina Guzman"
     
     submitted = st.form_submit_button("Quiero contratar")
     
